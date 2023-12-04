@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::error::Error;
 
 fn part1(lines: &[&str]) -> Result<usize, Box<dyn Error>> {
@@ -14,46 +15,53 @@ fn part1(lines: &[&str]) -> Result<usize, Box<dyn Error>> {
     Ok(result.iter().sum())
 }
 
+// TODO(elsuizo: 2023-12-04): mejorar esto que quedo re feo...
 fn part2(lines: &[&str]) -> Result<usize, Box<dyn Error>> {
-    // let mut result = Vec::new();
+    let mut digits = HashMap::new();
+    digits.insert("one", "1");
+    digits.insert("two", "2");
+    digits.insert("three", "3");
+    digits.insert("four", "4");
+    digits.insert("five", "5");
+    digits.insert("six", "6");
+    digits.insert("seven", "7");
+    digits.insert("eight", "8");
+    digits.insert("nine", "9");
+    let mut result = Vec::new();
     for line in lines {
-        let new_line = convert2numeric(line);
-        println!("{new_line}")
-    }
-
-    Ok(0)
-}
-
-fn convert2numeric(input: &str) -> String {
-    let mut result = String::new();
-    for window_length in 1..=5 {
-        for window in input.as_bytes().windows(window_length) {
-            match (window_length, window) {
-                (3, b"one") => result += "1",
-                (3, b"two") => result += "2",
-                (5, b"three") => result += "3",
-                (4, b"four") => result += "4",
-                (4, b"five") => result += "5",
-                (3, b"six") => result += "6",
-                (5, b"seven") => result += "7",
-                (5, b"eight") => result += "8",
-                (4, b"nine") => result += "8",
-                (_, _) => continue,
+        let mut aux = Vec::new();
+        for (index, c) in line.chars().enumerate() {
+            if c.is_digit(10) {
+                aux.push(c.to_string());
+            } else {
+                for (index_digits, &digit) in digits.keys().enumerate() {
+                    if line[index..].starts_with(digit) {
+                        aux.push(digits.get(&digit).unwrap().to_string())
+                    }
+                }
             }
         }
+        // TODO(elsuizo: 2023-12-04): esto se podria simplificar mucho
+        let a = aux.first().unwrap().to_owned() + aux.last().unwrap();
+        result.push(a);
     }
-    result
+    // TODO(elsuizo: 2023-12-04): esto se ve re feo
+    let r = result
+        .iter()
+        .map(|x| x.as_str().parse::<usize>().unwrap())
+        .sum();
+    Ok(r)
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let input = include_str!("../input_small2.txt");
+    let input = include_str!("../input.txt");
 
     let input: Vec<_> = input.split_whitespace().collect();
     // let result1 = part1(&input)?;
 
     // println!("{result1:?}");
-
-    let result2 = part2(&input);
+    let result2 = part2(&input)?;
+    println!("{result2}");
 
     Ok(())
 }
