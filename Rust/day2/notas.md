@@ -37,3 +37,30 @@ ser posibles obtenemos un 8
 Determinar que partidas pueden ser posibles si la bolsa ha sido cargada con solo
 12 red, 13 green y 14 blue. Cual es la suma de los IDs de esas partidas???
 
+## Parte2
+
+El elfo dice que han parado de producir nieve porque ellos no tienen agua!!! y
+no estan seguros de porque el agua ha parado; sin embargo podemos mostrar como
+obtener una fuente de agua para que chequeemos por nosotros mismos. Mientras
+continuamos caminando el elfo nos hace una segunda pregunta: en cada juego que
+hemos jugado en las bolsas cual es el menor numero de cubos de cada color que
+pueden hacer un un juego realizable???. De nuevo considerando el ejemplo
+anterior:
+
+```text
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+```
+
+ - en el juego 1 el juego podria realizarse con 4 reds, 2 greens y 6 blues
+ - el el juego 2 el juego podria realizarse con 1 red, 3 greens y 4 blues
+
+y asi sucesivamente. La potencia de un conjunto de cubos es igual al numero de
+reds, greens y blue multiplicados. La potencia de un conjunto minimo de cubos en
+el juego 1 es 48 y en los otros juegos seria 12, 1560, 630 y 36 respectivamente
+si sumamos todas esas potencias nos produciria la suma de 2286
+
+Cual es la suma de las potencias de los conjuntos minimos???

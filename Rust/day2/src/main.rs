@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 use std::error::Error;
 use std::ops::Not;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Ord, Eq, PartialOrd)]
 struct Cube<'a> {
     color: &'a str,
     amount: u32,
@@ -20,6 +20,10 @@ struct Cube<'a> {
 struct Game<'a> {
     id: &'a str,
     rounds: Vec<Vec<Cube<'a>>>,
+}
+
+fn cube_sorting(input: &Cube) -> u32 {
+    input.amount
 }
 
 impl<'a> Game<'a> {
@@ -38,16 +42,46 @@ impl<'a> Game<'a> {
                     .expect("game id should a parsable u32"),
             )
     }
+
+    fn is_valid2(&self) -> u32 {
+        let map: BTreeMap<&str, u32> = BTreeMap::new();
+        self.rounds
+            .iter()
+            .fold(map, |mut acc, round| {
+                for cube in round.iter() {
+                    acc.entry(cube.color)
+                        .and_modify(|v| {
+                            *v = (*v).max(cube.amount);
+                        })
+                        .or_insert(cube.amount);
+                }
+                acc
+            })
+            .values()
+            .product()
+    }
 }
 
 fn part1(input: &str) -> Result<usize, Box<dyn Error>> {
     let map = BTreeMap::from([("red", 12), ("green", 13), ("blue", 14)]);
     let games = parse_games(input).expect("this should parse !!!");
 
+    println!("{games:?}");
     Ok(games
         .1
         .iter()
         .filter_map(|game| game.is_valid(&map))
+        .sum::<u32>()
+        .try_into()
+        .unwrap())
+}
+
+fn part2(input: &str) -> Result<usize, Box<dyn Error>> {
+    let games = parse_games(input).expect("this should parse the games!!!");
+    Ok(games
+        .1
+        .iter()
+        .map(|game| game.is_valid2())
         .sum::<u32>()
         .try_into()
         .unwrap())
@@ -78,9 +112,11 @@ fn parse_games(input: &str) -> IResult<&str, Vec<Game>> {
 fn main() -> Result<(), Box<dyn Error>> {
     let input = include_str!("../input.txt");
 
-    let result = part1(&input)?;
+    let result1 = part1(&input)?;
+    let result2 = part2(&input)?;
 
-    println!("{result:?}");
+    println!("result part1: {result1:?}");
+    println!("result part2: {result2:?}");
 
     Ok(())
 }
